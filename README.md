@@ -2,7 +2,13 @@
 
 PHP is useful in 2025 because it is the only thing shared web hosting providers support well (for WordPress!).
 
-## Useful Snippets
+
+
+## Security
+
+[PHP manual section on security](https://www.php.net/manual/en/security.php)
+
+The Flask documentation has a nice [security checklist.](https://flask.palletsprojects.com/en/stable/web-security/#security-csp)
 
 From https://en.m.wikipedia.org/wiki/Session_fixation
 
