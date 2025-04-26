@@ -6,7 +6,7 @@ class CarInfo {
     public $year;
     public $color;
 
-    public function getCarString() {
+    public function getCarString(): string {
         if ($this->year) {
             return "$this->color $this->year $this->make $this->model";
         } else {
