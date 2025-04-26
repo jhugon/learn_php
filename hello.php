@@ -1,5 +1,20 @@
 <?php
 
+class CarInfo {
+    public $make;
+    public $model;
+    public $year;
+    public $color;
+
+    public function getCarString() {
+        if ($this->year) {
+            return "$this->color $this->year $this->make $this->model";
+        } else {
+            return "$this->color $this->make $this->model";
+        }
+    }
+}
+
 $db = new PDO('sqlite::memory:');
 $db->exec("CREATE TABLE cars (
 make VARCHAR NOT NULL,
@@ -30,12 +45,10 @@ $color = 'black';
 $stmt->execute([$make,$model,$color]);
 
 $query = $db->query("SELECT * FROM cars");
-$query->setFetchMode(PDO::FETCH_ASSOC);
-// $result = $query->fetchAll();
-foreach ($query as $row) {
-    echo "Row:\n";
-    foreach ($row as $key => $value) {
-        echo "$key: $value\n";
-    }
+$query->setFetchMode(PDO::FETCH_CLASS, "CarInfo");
+foreach ($query as $carinfo) {
+    echo "Car:\n";
+    print_r($carinfo);
+    echo $carinfo->getCarString(),"\n";
 }
 ?>
