@@ -17,7 +17,7 @@ $make = 'Chevy';
 $model = 'Bolt';
 $year = 2010;
 $color = 'silver';
-$stmt->execute($make,$model,$year,$color);
+$stmt->execute([$make,$model,$year,$color]);
 
 $query = $db->query("SELECT * FROM cars");
 $result = $query->fetchAll();
