@@ -10,18 +10,16 @@ year INT,
 color VARCHAR
 );");
 
-$stmt = $db->prepare("INSERT INTO cars (make, model, year, color) VALUES (:make, :model, :year, :color)");
-$stmt->bindParam(':make', $make);
-$stmt->bindParam(':model', $model);
+$stmt = $db->prepare("INSERT INTO cars (make, model, year, color) VALUES (?,?,?,?)");
 
 // insert one row
 $make = 'Chevy';
 $model = 'Bolt';
 $year = 2010;
 $color = 'silver';
-$stmt->execute();
+$stmt->execute($make,$model,$year,$color);
 
-$sth = $db->query("SELECT * FROM cars");
-$result = $sth->fetchAll();
-echo $result;
+$query = $db->query("SELECT * FROM cars");
+$result = $query->fetchAll();
+var_dump($result);
 ?>
