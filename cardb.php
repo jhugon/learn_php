@@ -14,6 +14,54 @@ class CarInfo {
             return "$this->color $this->make $this->model";
         }
     }
+
+    public function insertIntoDB(
+        PDO $db,
+    ): void {
+        if ($this->year) {
+            pdosingleprepare(
+                $db,
+                "INSERT INTO cars (make, model, color, year) VALUES (?,?,?,?)",
+                [
+                    $this->make,
+                    $this->model,
+                    $this->color,
+                    $this->year
+                ]
+            );
+        } else {
+            pdosingleprepare(
+                $db,
+                "INSERT INTO cars (make, model, color) VALUES (?,?,?)",
+                [
+                    $this->make,
+                    $this->model,
+                    $this->color
+                ]
+            );
+        }
+    }
+
+}
+
+// year is optional in class and database
+function createCarInfo(string $make, string $model, string $color, string $year = null): CarInfo {
+    $result = new CarInfo();
+    $result->make = $make;
+    $result->model = $model;
+    $result->color = $color;
+    $result->year = $year;
+    return $result;
+}
+
+
+function createCarTable(PDO $db): void {
+    $db->exec("CREATE TABLE cars (
+    make VARCHAR NOT NULL,
+    model VARCHAR NOT NULL,
+    year INT,
+    color VARCHAR NOT NULL
+    );");
 }
 
 // Wrapper for PDO "prepare" statements that execute once
@@ -27,39 +75,24 @@ function pdosingleprepare(PDO $db, string $sqltext, array $args): PDOStatement {
 
 if (!debug_backtrace()) { // this isn't included by anything
     $db = new PDO('sqlite::memory:');
-    $db->exec("CREATE TABLE cars (
-    make VARCHAR NOT NULL,
-    model VARCHAR NOT NULL,
-    year INT,
-    color VARCHAR NOT NULL
-    );");
-
-    $stmt = $db->prepare("INSERT INTO cars (make, model, year, color) VALUES (?,?,?,?)");
+    createCarTable($db);
 
     $make = 'Chevy';
     $model = 'Bolt';
     $year = 2010;
     $color = 'silver';
-    $stmt->execute([$make,$model,$year,$color]);
+    createCarInfo($make,$model,$color,$year)->insertIntoDB($db);
 
     $make = 'Honda';
     $model = 'Prelude';
     $year = 2010;
     $color = 'black';
-    $stmt->execute([$make,$model,$year,$color]);
+    createCarInfo($make,$model,$color,$year)->insertIntoDB($db);
 
     $make = 'Ford';
     $model = 'T';
     $color = 'black';
-    pdosingleprepare(
-        $db,
-        "INSERT INTO cars (make, model, color) VALUES (?,?,?)",
-        [
-            $make,
-            $model,
-            $color
-        ]
-    );
+    createCarInfo($make,$model,$color)->insertIntoDB($db);
 
     $query = $db->query("SELECT * FROM cars");
     $query->setFetchMode(PDO::FETCH_CLASS, "CarInfo");
@@ -69,4 +102,3 @@ if (!debug_backtrace()) { // this isn't included by anything
         echo $carinfo->getCarString(),"\n";
     }
 }
-?>
