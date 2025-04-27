@@ -1,5 +1,6 @@
 <?php
 
+// CarInfo class useful for getting out of the DB cars table
 class CarInfo {
     public $make;
     public $model;
@@ -24,46 +25,48 @@ function pdosingleprepare(PDO $db, string $sqltext, array $args): PDOStatement {
     return $stmt;
 }
 
-$db = new PDO('sqlite::memory:');
-$db->exec("CREATE TABLE cars (
-make VARCHAR NOT NULL,
-model VARCHAR NOT NULL,
-year INT,
-color VARCHAR NOT NULL
-);");
+if (!debug_backtrace()) { // this isn't included by anything
+    $db = new PDO('sqlite::memory:');
+    $db->exec("CREATE TABLE cars (
+    make VARCHAR NOT NULL,
+    model VARCHAR NOT NULL,
+    year INT,
+    color VARCHAR NOT NULL
+    );");
 
-$stmt = $db->prepare("INSERT INTO cars (make, model, year, color) VALUES (?,?,?,?)");
+    $stmt = $db->prepare("INSERT INTO cars (make, model, year, color) VALUES (?,?,?,?)");
 
-$make = 'Chevy';
-$model = 'Bolt';
-$year = 2010;
-$color = 'silver';
-$stmt->execute([$make,$model,$year,$color]);
+    $make = 'Chevy';
+    $model = 'Bolt';
+    $year = 2010;
+    $color = 'silver';
+    $stmt->execute([$make,$model,$year,$color]);
 
-$make = 'Honda';
-$model = 'Prelude';
-$year = 2010;
-$color = 'black';
-$stmt->execute([$make,$model,$year,$color]);
+    $make = 'Honda';
+    $model = 'Prelude';
+    $year = 2010;
+    $color = 'black';
+    $stmt->execute([$make,$model,$year,$color]);
 
-$make = 'Ford';
-$model = 'T';
-$color = 'black';
-pdosingleprepare(
-    $db,
-    "INSERT INTO cars (make, model, color) VALUES (?,?,?)",
-    [
-        $make,
-        $model,
-        $color
-    ]
-);
+    $make = 'Ford';
+    $model = 'T';
+    $color = 'black';
+    pdosingleprepare(
+        $db,
+        "INSERT INTO cars (make, model, color) VALUES (?,?,?)",
+        [
+            $make,
+            $model,
+            $color
+        ]
+    );
 
-$query = $db->query("SELECT * FROM cars");
-$query->setFetchMode(PDO::FETCH_CLASS, "CarInfo");
-foreach ($query as $carinfo) {
-    echo "Car:\n";
-    print_r($carinfo);
-    echo $carinfo->getCarString(),"\n";
+    $query = $db->query("SELECT * FROM cars");
+    $query->setFetchMode(PDO::FETCH_CLASS, "CarInfo");
+    foreach ($query as $carinfo) {
+        echo "Car:\n";
+        print_r($carinfo);
+        echo $carinfo->getCarString(),"\n";
+    }
 }
 ?>
