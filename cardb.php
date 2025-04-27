@@ -15,6 +15,15 @@ class CarInfo {
     }
 }
 
+// Wrapper for PDO "prepare" statements that execute once
+//
+// from https://phpdelusions.net/pdo/pdo_wrapper
+function pdosingleprepare(PDO $db, string $sqltext, array $args): PDOStatement {
+    $stmt = $db->prepare($sqltext);
+    $stmt->execute($args);
+    return $stmt;
+}
+
 $db = new PDO('sqlite::memory:');
 $db->exec("CREATE TABLE cars (
 make VARCHAR NOT NULL,
@@ -37,12 +46,18 @@ $year = 2010;
 $color = 'black';
 $stmt->execute([$make,$model,$year,$color]);
 
-$stmt = $db->prepare("INSERT INTO cars (make, model, color) VALUES (?,?,?)");
-
 $make = 'Ford';
 $model = 'T';
 $color = 'black';
-$stmt->execute([$make,$model,$color]);
+pdosingleprepare(
+    $db,
+    "INSERT INTO cars (make, model, color) VALUES (?,?,?)",
+    [
+        $make,
+        $model,
+        $color
+    ]
+);
 
 $query = $db->query("SELECT * FROM cars");
 $query->setFetchMode(PDO::FETCH_CLASS, "CarInfo");
