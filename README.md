@@ -28,3 +28,4 @@ $_SESSION['PREV_REMOTEADDR'] = $_SERVER['REMOTE_ADDR'];
 ## Cheat sheet
 
 - [`var_dump`](https://www.php.net/manual/en/function.var-dump.php): dump a variable to standard output
+- `<?= stuff ?>`: print whatever stuff is to std output. Useful in templates.
