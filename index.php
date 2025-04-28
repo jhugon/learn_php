@@ -7,14 +7,9 @@ CarInfo::create('Ford','F-150','white',1995)->insertIntoDB($db);
 CarInfo::create('Ford','F-150','silver',2000)->insertIntoDB($db);
 CarInfo::create('Ford','Focus','blue',2018)->insertIntoDB($db);
 $cars = CarInfo::fetchAll($db);
-var_dump($cars);
+$countcars = count($cars);
 ?>
-This is text in index.php!
-<?php foreach ($cars as $car) : ?>
-- <?= $car->getCarString(); ?>
+There are <?= $countcars ?> cars:
+<?php foreach ($cars as $car): ?>
+- <?= $car, PHP_EOL ?>
 <?php endforeach; ?>
-
-<?php foreach ($cars as $car) {
-var_dump($car);
-}
-?>

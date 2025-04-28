@@ -35,7 +35,7 @@ class CarInfo {
         return $query->fetchAll();
     }
 
-    public function getCarString(): string {
+    public function __toString(): string {
         if ($this->year) {
             return "$this->color $this->year $this->make $this->model";
         } else {
@@ -98,6 +98,6 @@ if (!debug_backtrace()) { // this isn't included by anything
     foreach ($query as $carinfo) {
         echo "Car:\n";
         print_r($carinfo);
-        echo $carinfo->getCarString(),"\n";
+        echo $carinfo,"\n";
     }
 }
