@@ -1,5 +1,7 @@
 <?php
 
+require 'helpers.php';
+
 // CarInfo class useful for getting out of the DB cars table
 class CarInfo {
     public $make;
@@ -7,6 +9,7 @@ class CarInfo {
     public $year;
     public $color;
 
+    // This is used as the constructor to help work with PDO
     // year is optional in class and database
     public static function create(string $make, string $model, string $color, string $year = null): Self {
         $result = new Self();
@@ -61,15 +64,6 @@ class CarInfo {
         }
     }
 
-}
-
-// Wrapper for PDO "prepare" statements that execute once
-//
-// from https://phpdelusions.net/pdo/pdo_wrapper
-function pdosingleprepare(PDO $db, string $sqltext, array $args): PDOStatement {
-    $stmt = $db->prepare($sqltext);
-    $stmt->execute($args);
-    return $stmt;
 }
 
 if (!debug_backtrace()) { // this isn't included by anything
