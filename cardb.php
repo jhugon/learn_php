@@ -29,6 +29,12 @@ class CarInfo {
         );");
     }
 
+    public static function fetchAll(PDO $db): array {
+        $query = $db->query("SELECT * FROM cars");
+        $query->setFetchMode(PDO::FETCH_CLASS, "CarInfo");
+        return $query->fetchAll();
+    }
+
     public function getCarString(): string {
         if ($this->year) {
             return "$this->color $this->year $this->make $this->model";
